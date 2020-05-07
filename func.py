@@ -10,7 +10,7 @@ import scorefn
 model = scorefn.load_model()
 
 def handler(ctx, data: io.BytesIO=None):
-    logging.getLogger().info("Costi-model: vers. 1.0")
+    logging.getLogger().info("Costi-model: vers. 1.1")
     
     try:
         input = json.loads(data.getvalue())['input']
