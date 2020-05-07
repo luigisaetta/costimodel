@@ -23,6 +23,8 @@ def handler(ctx, data: io.BytesIO=None):
     except (Exception, ValueError) as ex:
         logging.getLogger().error("%s", str(ex))
 
+    logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
+
     return response.Response(
         ctx, response_data=json.dumps(prediction),
         headers={"Content-Type": "application/json"}
