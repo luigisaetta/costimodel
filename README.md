@@ -1,4 +1,4 @@
 # costimodel
 
-vers 1.0
+vers 1.1: testata, OK
 
