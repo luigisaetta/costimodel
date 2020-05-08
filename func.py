@@ -7,6 +7,9 @@ import sys
 sys.path.append('/function')
 import scorefn
 
+# config
+# numero di colonne attese per vettore input
+NUM_COLS = 12
 model = scorefn.load_model()
 
 def handler(ctx, data: io.BytesIO=None):
@@ -23,11 +26,12 @@ def handler(ctx, data: io.BytesIO=None):
         num_cols = len(input[0])
 
         # attende 12 colonne per vettore
-        assert num_cols == 12
+        if num_cols != NUM_COLS:
+            logging.getLogger().error("Costi-model: num_cols in input not OK.")
+        else:
+            prediction = scorefn.predict(model, input)
 
-        prediction = scorefn.predict(model, input)
-
-        logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
+            logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
 
     except (Exception, ValueError) as ex:
         logging.getLogger().error("%s", str(ex))
