@@ -36,6 +36,10 @@ def handler(ctx, data: io.BytesIO=None):
 
         obj_file = client.get_object(namespace, bucket_name, resourceName)
 
+        content = obj_file.data.content
+
+        logging.info('content: ' + content)        
+        
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
     
