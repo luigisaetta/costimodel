@@ -10,6 +10,9 @@ from oci import pagination
 from io import StringIO
 import pandas as pd
 
+# per invocare il modello ML
+import scorefn
+
 from fdk import response
 import sys
 sys.path.append('/function')
@@ -17,12 +20,7 @@ sys.path.append('/function')
 # config
 # numero di colonne attese per vettore input
 NUM_COLS = 12
-
-#  === Helper Functions ===
-
-def get_compartment_id(oci_cfg, compartment_name):
-    return
-
+model = scorefn.load_model()
 
 # === Handler ===
 def handler(ctx, data: io.BytesIO=None):
@@ -46,7 +44,6 @@ def handler(ctx, data: io.BytesIO=None):
             # il nome del file e' in resourceName
             # compartment è il compartment della function ML da invocare
             compartment = os.environ.get("OCI_COMPARTMENT")
-            function_ocid = os.environ.get("ML_FUNCTION_OCID")
             namespace = os.environ.get("OCI_NAMESPACE")        
             bucket_name = os.environ.get("OCI_BUCKET")
 
@@ -71,15 +68,7 @@ def handler(ctx, data: io.BytesIO=None):
 
             report = "Report relativo al file: " + resourceName + "\n"
 
-            functions_client = functions.FunctionsInvokeClient(config={}, signer=signer)
-
-            # invoco la function della predizione:
-            func_input = {}
-            func_input['input'] = lista.tolist()
-            func_input['ID'] = 11
-            f_in_str = json.dumps(func_input)
-
-            resp = functions_client.invoke_function(function_ocid, invoke_function_body=f_in_str.encode('UTF-8'))
+            # invoco la predizione
 
             for vet in lista:
                 # vet è un vettore di 12 elementi
