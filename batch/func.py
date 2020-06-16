@@ -76,13 +76,16 @@ def handler(ctx, data: io.BytesIO=None):
             logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
             logging.getLogger().info("Type: prediction %s", type(prediction))
 
+            # prediction è un dict
+            vet_prediction = prediction['prediction']
+
             index = 0
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
-                    logging.info('riga: ' + str(vet) + ", " + str(prediction[index]))
+                    logging.info('riga: ' + str(vet) + ", " + str(vet_prediction[index]))
 
-                    report = report + "input: " + str(vet) + ", predizione: " + str(prediction[index]) + "\n"
+                    report = report + "input: " + str(vet) + ", predizione: " + str(vet_prediction[index]) + "\n"
                     index += 1
 
 
