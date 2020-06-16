@@ -4,6 +4,9 @@ import os
 import logging
 import oci
 import oci.object_storage
+from io import StringIO
+import pandas as pd
+
 
 from fdk import response
 import sys
@@ -27,7 +30,7 @@ def handler(ctx, data: io.BytesIO=None):
         body = json.loads(data.getvalue())
         resourceName = body["data"]["resourceName"]
         eventType = body["eventType"]
-        source = body["source"]
+        
         logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
 
         # il nome del file e' in resourceName
@@ -38,7 +41,21 @@ def handler(ctx, data: io.BytesIO=None):
 
         content = obj_file.data.content.decode('UTF-8')
 
-        logging.info('content: ' + content)        
+        # uso pandas per il parsing del csv
+        df = pd.read_csv(StringIO(content))
+
+        # elimino le colonne anno e mese che non sono usate dal modello
+        df = df.drop('anno', axis=1)
+        df = df.drop('mese', axis=1)
+
+        # in questo modo ho una lista di liste
+        lista = df.values
+
+        for vet in lista:
+            # vet è un vettore di 12 elementi
+            if vet.shape[0] == 12:
+                print(vet)
+                logging.info('riga: ' + vet)        
         
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
