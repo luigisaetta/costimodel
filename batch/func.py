@@ -5,7 +5,6 @@ import logging
 from fdk import response
 import sys
 sys.path.append('/function')
-import scorefn
 
 # config
 # numero di colonne attese per vettore input
