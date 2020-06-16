@@ -21,6 +21,7 @@ NUM_COLS = 12
 #  === Helper Functions ===
 
 def get_compartment_id(oci_cfg, compartment_name):
+    return
 
 
 # === Handler ===
