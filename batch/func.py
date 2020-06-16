@@ -69,6 +69,11 @@ def handler(ctx, data: io.BytesIO=None):
             report = "Report relativo al file: " + resourceName + "\n"
 
             # invoco la predizione
+            logging.getLogger().info("Costi-model: Invoked...")
+
+            prediction = scorefn.predict(model, input)
+
+            # logging.getLogger().info("Prediction shape: %d" , prediction.shape[0])
 
             for vet in lista:
                 # vet è un vettore di 12 elementi
