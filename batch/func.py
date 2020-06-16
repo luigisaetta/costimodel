@@ -79,7 +79,7 @@ def handler(ctx, data: io.BytesIO=None):
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
-                    logging.info('riga: ' + str(vet))
+                    logging.info('riga: ' + str(vet) + ", str(prediction[index])")
 
                     report = report + "input: " + str(vet) + ", predizione: " + str(prediction[index]) + "\n"
                     index += 1
