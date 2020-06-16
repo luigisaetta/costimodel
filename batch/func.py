@@ -75,7 +75,7 @@ def handler(ctx, data: io.BytesIO=None):
 
             # invoco la function della predizione:
             func_input = {}
-            func_input['input'] = lista
+            func_input['input'] = lista.tolist()
             func_input['ID'] = 11
             f_in_str = json.dumps(func_input)
 
