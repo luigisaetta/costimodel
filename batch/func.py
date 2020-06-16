@@ -5,6 +5,7 @@ import logging
 import oci
 import oci.object_storage
 from oci import functions
+from oci import identity
 from io import StringIO
 import pandas as pd
 
@@ -35,6 +36,8 @@ def handler(ctx, data: io.BytesIO=None):
             logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
 
             # il nome del file e' in resourceName
+            # compartment è il compartment della function ML da invocare
+            compartment = os.environ.get("OCI_COMPARTMENT")
             namespace = os.environ.get("OCI_NAMESPACE")        
             bucket_name = os.environ.get("OCI_BUCKET")
 
@@ -61,12 +64,12 @@ def handler(ctx, data: io.BytesIO=None):
 
             functions_client = functions.FunctionsManagementClient(config={}, signer=signer)
 
+            # invoco la function della predizione:
+
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
                     logging.info('riga: ' + str(vet))
-                    
-                    # invoco la funzione della predizione:
 
                     report = report + "input: " + str(vet) + ", predizione: " + "\n"
 
