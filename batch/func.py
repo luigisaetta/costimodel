@@ -1,6 +1,8 @@
 import io
 import json
 import logging
+import oci
+import oci.object_storage
 
 from fdk import response
 import sys
@@ -16,7 +18,14 @@ def handler(ctx, data: io.BytesIO=None):
     try:
         logging.getLogger().info("Costi-batch: Invoked...")
 
-    except (Exception, ValueError) as ex:
+        # legge i dati dall'event
+        body = json.loads(data.getvalue())
+        resourceName = body["data"]["resourceName"]
+        eventType = body["eventType"]
+        source = body["source"]
+        logging.info('***eventType:' + eventType + ' resourceName:' + resourceName)
+
+    except Exception as ex:
         logging.getLogger().error("%s", str(ex))
     
     prediction = {}
