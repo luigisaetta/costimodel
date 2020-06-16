@@ -71,7 +71,7 @@ def handler(ctx, data: io.BytesIO=None):
             # invoco la predizione
             logging.getLogger().info("Costi-model: Invoked...")
 
-            prediction = scorefn.predict(model, input)
+            prediction = scorefn.predict(model, lista)
 
             # logging.getLogger().info("Prediction shape: %d" , prediction.shape[0])
 
