@@ -6,6 +6,7 @@ import oci
 import oci.object_storage
 from oci import functions
 from oci import identity
+from oci import pagination
 from io import StringIO
 import pandas as pd
 
@@ -17,6 +18,12 @@ sys.path.append('/function')
 # numero di colonne attese per vettore input
 NUM_COLS = 12
 
+#  === Helper Functions ===
+
+def get_compartment_id(oci_cfg, compartment_name):
+
+
+# === Handler ===
 def handler(ctx, data: io.BytesIO=None):
     logging.getLogger().info("Costi-batch: vers. 1.0...")
     
