@@ -36,7 +36,7 @@ def handler(ctx, data: io.BytesIO=None):
 
         obj_file = client.get_object(namespace, bucket_name, resourceName)
 
-        content = obj_file.data.content
+        content = str(obj_file.data.content)
 
         logging.info('content: ' + content)        
         
