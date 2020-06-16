@@ -56,13 +56,13 @@ def handler(ctx, data: io.BytesIO=None):
             # in questo modo ho una lista di liste
             lista = df.values
 
-            report = "Report relativo al file: " + resourceName
+            report = "Report relativo al file: " + resourceName + "\n"
 
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
                     logging.info('riga: ' + str(vet))
-                    report = report + str(vet) + "\n"    
+                    report = report + "input: " + str(vet) + ", predizione: " + "\n"    
 
             # produce il report
             my_data = report.encode('UTF-8')
