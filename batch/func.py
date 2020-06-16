@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import logging
 import oci
 import oci.object_storage
@@ -15,6 +16,8 @@ NUM_COLS = 12
 def handler(ctx, data: io.BytesIO=None):
     logging.getLogger().info("Costi-batch: vers. 1.0")
     
+    signer = oci.auth.signers.get_resource_principals_signer()
+
     try:
         logging.getLogger().info("Costi-batch: Invoked...")
 
@@ -23,7 +26,10 @@ def handler(ctx, data: io.BytesIO=None):
         resourceName = body["data"]["resourceName"]
         eventType = body["eventType"]
         source = body["source"]
-        logging.info('***eventType:' + eventType + ' resourceName:' + resourceName)
+        logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
+
+        # il nome del file e' in resourceName
+        namespace = os.environ.get("OCI_NAMESPACE")        
 
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
