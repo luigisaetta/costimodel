@@ -73,7 +73,7 @@ def handler(ctx, data: io.BytesIO=None):
 
             prediction = scorefn.predict(model, lista)
 
-            # logging.getLogger().info("Prediction shape: %d" , prediction.shape[0])
+            logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
 
             for vet in lista:
                 # vet è un vettore di 12 elementi
