@@ -32,6 +32,9 @@ def handler(ctx, data: io.BytesIO=None):
 
         # il nome del file e' in resourceName
         namespace = os.environ.get("OCI_NAMESPACE")        
+        bucket_name = os.environ.get("OCI_BUCKET")
+
+        obj_file = client.get_object(namespace, bucket_name, resourceName)
 
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
