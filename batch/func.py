@@ -44,16 +44,16 @@ def handler(ctx, data: io.BytesIO=None):
         df = pd.read_csv(StringIO(content))
 
         # elimino le colonne anno e mese che non sono usate dal modello
-        # df = df.drop('anno', axis=1)
-        # df = df.drop('mese', axis=1)
+        df = df.drop('anno', axis=1)
+        df = df.drop('mese', axis=1)
 
         # in questo modo ho una lista di liste
-        # lista = df.values
+        lista = df.values
 
-        # for vet in lista:
+        for vet in lista:
             # vet è un vettore di 12 elementi
-            # if vet.shape[0] == 12:
-              #  logging.info('riga: ' + vet)        
+            if vet.shape[0] == 12:
+                logging.info('riga: ' + str(vet))        
         
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
