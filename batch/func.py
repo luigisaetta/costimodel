@@ -81,7 +81,7 @@ def handler(ctx, data: io.BytesIO=None):
                 if vet.shape[0] == 12:
                     logging.info('riga: ' + str(vet))
 
-                    report = report + "input: " + str(vet) + ", predizione: " + str(prediction[index] + "\n"
+                    report = report + "input: " + str(vet) + ", predizione: " + str(prediction[index]) + "\n"
                     index += 1
 
 
