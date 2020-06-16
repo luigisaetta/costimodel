@@ -64,7 +64,7 @@ def handler(ctx, data: io.BytesIO=None):
         
             my_data = b'test report...'
 
-            client.put_object(namespace, bucket_name, report_name, my_data)
+            client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
     except Exception as ex:
         logging.getLogger().error("%s", str(ex))
