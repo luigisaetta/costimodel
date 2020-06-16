@@ -16,21 +16,19 @@ sys.path.append('/function')
 NUM_COLS = 12
 
 def handler(ctx, data: io.BytesIO=None):
-    logging.getLogger().info("Costi-batch: vers. 1.0")
+    logging.getLogger().info("Costi-batch: vers. 1.0...")
     
     signer = oci.auth.signers.get_resource_principals_signer()
     
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
 
     try:
-        logging.getLogger().info("Costi-batch: Invoked...")
-
         # legge i dati dall'event
         body = json.loads(data.getvalue())
         resourceName = body["data"]["resourceName"]
         eventType = body["eventType"]
         
-        # solo i file csv sono elaborati
+        # controlla che il file abbia estensione csv, solo i file csv sono elaborati
         if "csv" in resourceName:
 
             logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
@@ -39,6 +37,7 @@ def handler(ctx, data: io.BytesIO=None):
             namespace = os.environ.get("OCI_NAMESPACE")        
             bucket_name = os.environ.get("OCI_BUCKET")
 
+            # legge il contenuto del file
             obj_file = client.get_object(namespace, bucket_name, resourceName)
 
             content = obj_file.data.content.decode('UTF-8')
@@ -57,12 +56,16 @@ def handler(ctx, data: io.BytesIO=None):
             # in questo modo ho una lista di liste
             lista = df.values
 
+            report = "Report relativo al file: " + resourceName
+
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
-                    logging.info('riga: ' + str(vet))        
-        
-            my_data = b'test report...'
+                    logging.info('riga: ' + str(vet))
+                    report = report + str(vet) + "\n"    
+
+            # produce il report
+            my_data = report.encode('UTF-8')
 
             client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
