@@ -4,6 +4,7 @@ import os
 import logging
 import oci
 import oci.object_storage
+from oci import functions
 from io import StringIO
 import pandas as pd
 
@@ -58,11 +59,17 @@ def handler(ctx, data: io.BytesIO=None):
 
             report = "Report relativo al file: " + resourceName + "\n"
 
+            functions_client = functions.FunctionsManagementClient(config={}, signer=signer)
+
             for vet in lista:
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == 12:
                     logging.info('riga: ' + str(vet))
-                    report = report + "input: " + str(vet) + ", predizione: " + "\n"    
+                    
+                    # invoco la funzione della predizione:
+
+                    report = report + "input: " + str(vet) + ", predizione: " + "\n"
+
 
             # produce il report
             my_data = report.encode('UTF-8')
