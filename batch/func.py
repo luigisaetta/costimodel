@@ -5,8 +5,6 @@ import logging
 import oci
 import oci.object_storage
 from oci import functions
-from oci import identity
-from oci import pagination
 from io import StringIO
 import pandas as pd
 
@@ -43,7 +41,6 @@ def handler(ctx, data: io.BytesIO=None):
             logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
 
             # il nome del file e' in resourceName
-            # compartment è il compartment della function ML da invocare
             namespace = os.environ.get("OCI_NAMESPACE")        
             bucket_name = os.environ.get("OCI_BUCKET")
 
@@ -66,6 +63,7 @@ def handler(ctx, data: io.BytesIO=None):
             # in questo modo ho una lista di liste
             lista = df.values
 
+            # prima riga del report
             report = "Report relativo al file: " + resourceName + "\n\n"
 
             # invoco la predizione

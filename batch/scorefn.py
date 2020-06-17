@@ -44,6 +44,5 @@ def predict(model, data):
         Format: {'prediction':output from model.predict method}
 
     """
-    # X = pd.read_json(io.StringIO(data)) if isinstance(data, str) else pd.DataFrame.from_dict(data)
     return {'prediction':model.predict(data).tolist()}
 
