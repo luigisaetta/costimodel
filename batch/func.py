@@ -39,6 +39,8 @@ def check_contents(df):
 
     return isOK
 
+# la funzione deve eliminare dal dataframe tutte le colonne che non sono
+# dati in input al modello
 def trasforma_df(df):
     # anche questa va customizzata
     df = df.drop('anno', axis=1)
@@ -46,13 +48,13 @@ def trasforma_df(df):
 
     return df
 
+# formatta il vettore di input per scrivere nel report
 def formatta_input(vet):
-    # formatta il vettore di input per scrivere nel report
     str_out = '['
     for index, val in enumerate(vet):
         str_out += str(round(val, 2))
 
-        if index < NUM_COLS:
+        if index < NUM_COLS -1:
             str_out += ','
     
     str_out += ']'
@@ -71,13 +73,13 @@ def handler(ctx, data: io.BytesIO=None):
     result['response'] = 'OK'
 
     try:
-        # legge i dati dall'event
+        # legge i dati dall'Event
         body = json.loads(data.getvalue())
         resourceName = body["data"]["resourceName"]
         eventType = body["eventType"]
         
         # controlla che il file abbia estensione csv, solo i file csv sono elaborati
-        if "csv" in resourceName:
+        if ("createobject" in eventType) and ("csv" in resourceName):
 
             logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
 
