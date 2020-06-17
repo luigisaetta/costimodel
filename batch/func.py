@@ -79,16 +79,15 @@ def handler(ctx, data: io.BytesIO=None):
             vet_prediction = prediction['prediction']
 
             # preparo il report
-            index = 0
-            for vet in lista:
+            
+            for index, vet in enumerate(lista):
                 # vet è un vettore di 12 elementi
                 if vet.shape[0] == NUM_COLS:
-                    logging.info('riga: ' + str(vet) + ", " + str(vet_prediction[index]))
-
-                    report = report + "input: " + str(vet) + ", predizione: " + str(vet_prediction[index]) + "\n"
-                    index += 1
-
-
+                    val_pred = round(vet_prediction[index], 2)
+                    logging.info('riga: ' + str(vet) + ", " + str(val_pred))
+                    # aggiungo riga al testo
+                    report = report + "input: " + str(vet) + ", predizione: " + str(val_pred) + "\n"
+                    
             # produce il report
             my_data = report.encode(ENCODING)
 
