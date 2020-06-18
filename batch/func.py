@@ -78,6 +78,9 @@ def handler(ctx, data: io.BytesIO=None):
     
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
 
+    # for sending notification (emails)
+    notificationClient = oci.ons.NotificationDataPlaneClient(config={}, signer=signer)
+
     result = {}
     result['response'] = 'OK'
 
@@ -101,7 +104,6 @@ def handler(ctx, data: io.BytesIO=None):
             content = obj_file.data.content.decode(ENCODING)
 
             # preparo il nome del file di report
-            
             report_name = base_name + "_report.txt"
 
             # uso Pandas per il parsing del csv
@@ -118,7 +120,7 @@ def handler(ctx, data: io.BytesIO=None):
                 # prima riga del report
                 report = "Report relativo al file: " + resourceName + "\n\n"
 
-                LOG.info(": Invoked...")
+                LOG.info(": Invoking predictions...")
                 
                 # *** invoco la predizione
                 prediction = scorefn.predict(model, lista)
