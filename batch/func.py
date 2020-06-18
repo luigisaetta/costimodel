@@ -63,12 +63,11 @@ def formatta_input(vet):
 # === Handler ===
 def handler(ctx, data: io.BytesIO=None):
     # per il logging
-    FUNC_NAME = 'costi-model-batch'
     FORMAT = '%(asctime)-15s'
     logging.basicConfig(format=FORMAT)
-    LOG = logging.getLogger('predict_batch')
+    LOG = logging.getLogger('costi-model-batch')
 
-    LOG.info(FUNC_NAME + ": vers. 1.0...")
+    LOG.info(": vers. 1.0...")
     
     signer = oci.auth.signers.get_resource_principals_signer()
     
@@ -113,12 +112,12 @@ def handler(ctx, data: io.BytesIO=None):
                 # prima riga del report
                 report = "Report relativo al file: " + resourceName + "\n\n"
 
-                LOG.info(FUNC_NAME + ": Invoked...")
+                LOG.info(": Invoked...")
                 
                 # *** invoco la predizione
                 prediction = scorefn.predict(model, lista)
 
-                LOG.info(FUNC_NAME + ": prediction %s", json.dumps(prediction))
+                LOG.info(": prediction %s", json.dumps(prediction))
 
                 # prediction è un dictionary, estraggo la lista delle predizioni
                 vet_prediction = prediction['prediction']
@@ -128,7 +127,7 @@ def handler(ctx, data: io.BytesIO=None):
                 for index, vet in enumerate(lista):
                     # vet è un vettore di 12 elementi, controllo già fatto
                     val_pred = round(vet_prediction[index], 2)
-                    LOG.info(FUNC_NAME + ':riga: ' + formatta_input(vet) + ", " + str(val_pred))
+                    LOG.info(':riga: ' + formatta_input(vet) + ", " + str(val_pred))
                     # aggiungo riga al testo
                     report = report + "input: " + formatta_input(vet) + ", predizione: " + str(val_pred) + "\n"
                     
@@ -137,11 +136,11 @@ def handler(ctx, data: io.BytesIO=None):
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
             else:
-                LOG.info(FUNC_NAME + ', Input file non OK !')
+                LOG.info(', Input file non OK !')
                 result['response'] = 'KO'
 
     except Exception as ex:
-        LOG.error(FUNC_NAME + ", Errore in predictor_batch....")
+        LOG.error(", Errore in predictor_batch....")
         LOG.error("%s", str(ex))
         result['response'] = 'KO'
     
