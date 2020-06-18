@@ -150,7 +150,7 @@ def handler(ctx, data: io.BytesIO=None):
                 # genera l'authenticated request per accedere al report su Object Storage
 
                 # durata max della par
-                d = datetime.datetime.utcnow() + timedelta(hours=24)
+                d = datetime.utcnow() + timedelta(hours=24)
 
                 par_req_detail = oci.object_storage.models.CreatePreauthenticatedRequestDetails(name = "par_req",
                 access_type = 'ObjectRead', object_name = report_name,  time_expires=d)
