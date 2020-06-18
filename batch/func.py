@@ -144,7 +144,8 @@ def handler(ctx, data: io.BytesIO=None):
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
                 # invia notifica
-                bodyMessage = "Il ML report " + report_name + "è stato generato !!!"
+                bodyMessage = "Il ML report " + report_name + " è stato generato !!! \n"
+                bodyMessage += "puoi scaricarlo al link https://www.oracle.com \n"
                 notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 LOG.info("inviata notifica...")
                 TOPIC_OCID = "ocid1.onstopic.oc1.eu-frankfurt-1.aaaaaaaaaph5axope6bbyk6r5rr2meydgosy4wspcgyvnjmlrv3sxxirl5vq"
