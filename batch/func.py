@@ -145,11 +145,23 @@ def handler(ctx, data: io.BytesIO=None):
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
                 # invia notifica
-                bodyMessage = "Il ML report " + report_name + " è stato generato !!! \n"
-                bodyMessage += "puoi scaricarlo al link https://www.oracle.com \n"
+
+                # genera l'authenticated request per accedere al report su Object Storage
+                d = datetime.datetime.utcnow() + 3600
+
+                par_req_detail = oci.object_storage.models.CreatePreauthenticatedRequestDetails(name = "par_req",
+                access_type = 'ObjectRead', object_name = report_name,  time_expires=d)
+                
+                par_resp = client.create_preauthenticated_request(namespace, bucket_name, par_req_detail)
+                
+                LOG.info(par_resp.content.decode(ENCODING))
+
+                bodyMessage = "Il ML report: " + report_name + " è stato generato !! \n"
+                bodyMessage += "Puoi scaricarlo al link https://www.oracle.com \n"
+                
                 notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 
-                LOG.info("inviata notifica...")
+                LOG.info("invia notifica...")
                 
                 notificationClient.publish_message(topic_ocid, notificationMessage)
 
