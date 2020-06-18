@@ -67,7 +67,7 @@ def handler(ctx, data: io.BytesIO=None):
     logging.basicConfig(format=FORMAT)
     LOG = logging.getLogger('costi-model-batch')
 
-    LOG.info(": vers. 1.0...")
+    LOG.info(": vers. 1.5...")
     
     signer = oci.auth.signers.get_resource_principals_signer()
     
@@ -76,18 +76,19 @@ def handler(ctx, data: io.BytesIO=None):
     result = {}
     result['response'] = 'OK'
 
+    # legge i dati dall'Event
+    body = json.loads(data.getvalue())
+    resourceName = body["data"]["resourceName"]
+    eventType = body["eventType"]
+
+    # il nome del file e' in resourceName
+    namespace = os.environ.get("OCI_NAMESPACE")        
+    bucket_name = os.environ.get("OCI_BUCKET")
+    base_name = resourceName.split('.')[0]
+
     try:
-        # legge i dati dall'Event
-        body = json.loads(data.getvalue())
-        resourceName = body["data"]["resourceName"]
-        eventType = body["eventType"]
-        
         # controlla che il file sia stato creato ed abbia estensione csv, solo i file csv sono elaborati
         if ("createobject" in eventType) and ("csv" in resourceName):
-
-            # il nome del file e' in resourceName
-            namespace = os.environ.get("OCI_NAMESPACE")        
-            bucket_name = os.environ.get("OCI_BUCKET")
 
             # legge il contenuto del file
             obj_file = client.get_object(namespace, bucket_name, resourceName)
@@ -95,7 +96,7 @@ def handler(ctx, data: io.BytesIO=None):
             content = obj_file.data.content.decode(ENCODING)
 
             # preparo il nome del file di report
-            base_name = resourceName.split('.')[0]
+            
             report_name = base_name + "_report.txt"
 
             # uso Pandas per il parsing del csv
@@ -144,6 +145,15 @@ def handler(ctx, data: io.BytesIO=None):
         LOG.error("%s", str(ex))
         result['response'] = 'KO'
     
+    if result['response'] == 'KO':
+        # produce un file bad
+        report = "Report relativo al file: " + resourceName + "\n\n"
+        report += "elaborazioni interrotte..."
+
+        my_data = report.encode(ENCODING)
+        report_name = base_name + "_bad.txt"
+        client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
+
     return response.Response(
         ctx, response_data=json.dumps(result),
         headers={"Content-Type": "application/json"}
