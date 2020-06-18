@@ -15,14 +15,16 @@ import sys
 sys.path.append('/function')
 
 # config
-# numero di colonne attese per vettore input
 ENCODING = 'UTF-8'
-NUM_COLS = 12
 
 # load ML model
 model = scorefn.load_model()
 
 # === Helper Functions ===
+
+# numero di colonne attese per vettore input
+NUM_COLS = 12
+
 def check_contents(df):
     # la funzione assume che il file possa essere letto in un dataframe
     # ritorna true se il dataframe è OK...
@@ -42,12 +44,15 @@ def check_contents(df):
 # dati in input al modello
 def trasforma_df(df):
     # anche questa va customizzata
-    df = df.drop('anno', axis=1)
-    df = df.drop('mese', axis=1)
+    # in questo caso cancella le colonne non in input al modello
+    cols_to_drop = ['anno', 'mese']
 
+    for col in cols_to_drop:
+        df = df.drop(col, axis=1)
+    
     return df
 
-# formatta il vettore di input per scrivere nel report
+# formatta il vettore di input per scrivere nel file di report
 def formatta_input(vet):
     str_out = '['
     for index, val in enumerate(vet):
