@@ -144,10 +144,11 @@ def handler(ctx, data: io.BytesIO=None):
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
                 # invia notifica
-                bodyMessage = "Il ML report è stato generato !!!")
+                bodyMessage = "Il ML report " + report_name + "è stato generato !!!"
                 notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 LOG.info("inviata notifica...")
-                notificationClient.publish_message(topic_ocid, notificationMessage)
+                TOPIC_OCID = "ocid1.onstopic.oc1.eu-frankfurt-1.aaaaaaaaaph5axope6bbyk6r5rr2meydgosy4wspcgyvnjmlrv3sxxirl5vq"
+                notificationClient.publish_message(TOPIC_OCID, notificationMessage)
 
             else:
                 LOG.info(', Input file non OK !')
