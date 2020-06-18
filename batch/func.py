@@ -130,7 +130,7 @@ def handler(ctx, data: io.BytesIO=None):
                     val_pred = round(vet_prediction[index], 2)
                     LOG.info(':riga: ' + formatta_input(vet) + ", " + str(val_pred))
                     # aggiungo riga al testo
-                    report = report + "input: " + formatta_input(vet) + ", predizione: " + str(val_pred) + "\n"
+                    report = report + "input: " + formatta_input(vet) + ", predizione: " + str(val_pred) + " mil. \n"
                     
                 # produce il report
                 my_data = report.encode(ENCODING)
