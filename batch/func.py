@@ -92,6 +92,7 @@ def handler(ctx, data: io.BytesIO=None):
     # il nome del file e' in resourceName
     namespace = os.environ.get("OCI_NAMESPACE")        
     bucket_name = os.environ.get("OCI_BUCKET")
+    topic_ocid = os.environ.get("OCI_TOPIC_OCID")
     base_name = resourceName.split('.')[0]
 
     try:
@@ -147,9 +148,10 @@ def handler(ctx, data: io.BytesIO=None):
                 bodyMessage = "Il ML report " + report_name + " è stato generato !!! \n"
                 bodyMessage += "puoi scaricarlo al link https://www.oracle.com \n"
                 notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
+                
                 LOG.info("inviata notifica...")
-                TOPIC_OCID = "ocid1.onstopic.oc1.eu-frankfurt-1.aaaaaaaaaph5axope6bbyk6r5rr2meydgosy4wspcgyvnjmlrv3sxxirl5vq"
-                notificationClient.publish_message(TOPIC_OCID, notificationMessage)
+                
+                notificationClient.publish_message(topic_ocid, notificationMessage)
 
             else:
                 LOG.info(', Input file non OK !')
