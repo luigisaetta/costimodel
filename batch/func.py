@@ -2,7 +2,7 @@ import io
 import json
 import os
 import logging
-import datetime
+from datetime import datetime, timedelta
 import oci
 import oci.object_storage
 from io import StringIO
@@ -148,7 +148,9 @@ def handler(ctx, data: io.BytesIO=None):
                 # invia notifica
 
                 # genera l'authenticated request per accedere al report su Object Storage
-                d = datetime.datetime.utcnow() + 3600
+
+                # durata max della par
+                d = datetime.datetime.utcnow() + timedelta(hours=24)
 
                 par_req_detail = oci.object_storage.models.CreatePreauthenticatedRequestDetails(name = "par_req",
                 access_type = 'ObjectRead', object_name = report_name,  time_expires=d)
