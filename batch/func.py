@@ -4,7 +4,6 @@ import os
 import logging
 import oci
 import oci.object_storage
-from oci import functions
 from io import StringIO
 import pandas as pd
 
@@ -63,7 +62,9 @@ def formatta_input(vet):
 
 # === Handler ===
 def handler(ctx, data: io.BytesIO=None):
-    logging.getLogger().info("Costi-batch: vers. 1.0...")
+    LOG = logging.getLogger('predict_batch')
+
+    LOG.info("Costi-batch: vers. 1.0...")
     
     signer = oci.auth.signers.get_resource_principals_signer()
     
@@ -78,10 +79,8 @@ def handler(ctx, data: io.BytesIO=None):
         resourceName = body["data"]["resourceName"]
         eventType = body["eventType"]
         
-        # controlla che il file abbia estensione csv, solo i file csv sono elaborati
+        # controlla che il file sia stato creato ed abbia estensione csv, solo i file csv sono elaborati
         if ("createobject" in eventType) and ("csv" in resourceName):
-
-            logging.info('***eventType: ' + eventType + ', resourceName: ' + resourceName)
 
             # il nome del file e' in resourceName
             namespace = os.environ.get("OCI_NAMESPACE")        
@@ -110,11 +109,12 @@ def handler(ctx, data: io.BytesIO=None):
                 # prima riga del report
                 report = "Report relativo al file: " + resourceName + "\n\n"
 
-                logging.getLogger().info("Costi-model: Invoked...")
-                # invoco la predizione
+                LOG.info("Costi-model: Invoked...")
+                
+                # *** invoco la predizione
                 prediction = scorefn.predict(model, lista)
 
-                logging.getLogger().info("Costi-model: prediction %s", json.dumps(prediction))
+                LOG.info("Costi-model: prediction %s", json.dumps(prediction))
 
                 # prediction è un dictionary, estraggo la lista delle predizioni
                 vet_prediction = prediction['prediction']
@@ -124,21 +124,21 @@ def handler(ctx, data: io.BytesIO=None):
                 for index, vet in enumerate(lista):
                     # vet è un vettore di 12 elementi, controllo già fatto
                     val_pred = round(vet_prediction[index], 2)
-                    logging.info('riga: ' + formatta_input(vet) + ", " + str(val_pred))
+                    LOG.info('riga: ' + formatta_input(vet) + ", " + str(val_pred))
                     # aggiungo riga al testo
                     report = report + "input: " + formatta_input(vet) + ", predizione: " + str(val_pred) + "\n"
                     
                 # produce il report
                 my_data = report.encode(ENCODING)
-
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
+
             else:
-                logging.info('Input file non OK !')
+                LOG.info('Input file non OK !')
                 result['response'] = 'KO'
 
     except Exception as ex:
-        logging.getLogger().error("Errore in predictor_batch....")
-        logging.getLogger().error("%s", str(ex))
+        LOG.error("Errore in predictor_batch....")
+        LOG.error("%s", str(ex))
         result['response'] = 'KO'
     
     return response.Response(
