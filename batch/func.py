@@ -157,7 +157,7 @@ def handler(ctx, data: io.BytesIO=None):
                 
                 par_resp = client.create_preauthenticated_request(namespace, bucket_name, par_req_detail)
                 
-                LOG.info(par_resp.access_uri)
+                LOG.info(par_resp.data.access_uri)
 
                 bodyMessage = "Il ML report: " + report_name + " è stato generato !! \n"
                 bodyMessage += "Puoi scaricarlo al link https://www.oracle.com \n"
