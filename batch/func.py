@@ -79,9 +79,6 @@ def handler(ctx, data: io.BytesIO=None):
     
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
 
-    # for sending notification (emails)
-    notificationClient = oci.ons.NotificationDataPlaneClient(config={}, signer=signer)
-
     result = {}
     result['response'] = 'OK'
 
@@ -145,30 +142,7 @@ def handler(ctx, data: io.BytesIO=None):
                 my_data = report.encode(ENCODING)
                 client.put_object(namespace, bucket_name, report_name, my_data, content_type='text/csv')
 
-                # invia notifica
-
-                # genera l'authenticated request per accedere al report su Object Storage
-
-                # durata max della par
-                d = datetime.utcnow() + timedelta(hours=24)
-
-                par_req_detail = oci.object_storage.models.CreatePreauthenticatedRequestDetails(name = "par_req",
-                access_type = 'ObjectRead', object_name = report_name,  time_expires=d)
-                
-                par_resp = client.create_preauthenticated_request(namespace, bucket_name, par_req_detail)
-                
-                # 
-                base_url = "https://objectstorage.eu-frankfurt-1.oraclecloud.com"
-                LOG.info(base_url + par_resp.data.access_uri)
-
-                bodyMessage = "Il ML report: " + report_name + " è stato generato !! \n"
-                bodyMessage += "Puoi scaricarlo al link: " + base_url + par_resp.data.access_uri
-                
-                notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
-                
-                LOG.info("invia notifica...")
-                
-                notificationClient.publish_message(topic_ocid, notificationMessage)
+                # la notifica è inviata da sender_notification
 
             else:
                 LOG.info(', Input file non OK !')
