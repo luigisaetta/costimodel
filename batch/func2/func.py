@@ -19,7 +19,8 @@ ENCODING = 'UTF-8'
 def build_bodyMail(file_name, par_url, exp_date):
     bodyMessage = "Il Machine Learning report: " + file_name + " è stato generato !! \n\n"
     bodyMessage += "Puoi scaricarlo al link: " + par_url + "\n\n"
-    bodyMessage += "Il download è possibile fino alla data: " + str(exp_date)
+    # elimino i secondi finali
+    bodyMessage += "Il download è possibile fino alla data: " + str(exp_date)[:-9]
 
     return bodyMessage
 
