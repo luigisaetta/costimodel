@@ -1,6 +1,0 @@
-entrypoint: /python/bin/fdk /function/func.py handler
-memory: 1024
-name: predictor_batch
-runtime: python3.6
-schema_version: 20180708
-version: 0.0.1
