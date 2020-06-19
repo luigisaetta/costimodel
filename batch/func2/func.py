@@ -16,9 +16,9 @@ ENCODING = 'UTF-8'
 
 
 # === Helper Functions ===
-def build_bodyMail(file_name, , par_url, exp_date):
+def build_bodyMail(file_name, par_url, exp_date):
     bodyMessage = "Il Machine Learning report: " + file_name + " è stato generato !! \n\n"
-    bodyMessage += "Puoi scaricarlo al link: " + par_ url + "\n\n"
+    bodyMessage += "Puoi scaricarlo al link: " + par_url + "\n\n"
     bodyMessage += "Il download è possibile fino alla data: " + str(exp_date)
 
     return bodyMessage
@@ -76,7 +76,7 @@ def handler(ctx, data: io.BytesIO=None):
             LOG.info(url)
 
             # costruisce il body della mail
-            bodyMessage = build_bodyMail(resourceName, url, d):
+            bodyMessage = build_bodyMail(resourceName, url, d)
                 
             notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 
