@@ -16,7 +16,12 @@ ENCODING = 'UTF-8'
 
 
 # === Helper Functions ===
+def build_bodyMail(file_name, , par_url, exp_date):
+    bodyMessage = "Il Machine Learning report: " + file_name + " è stato generato !! \n\n"
+    bodyMessage += "Puoi scaricarlo al link: " + par_ url + "\n\n"
+    bodyMessage += "Il download è possibile fino alla data: " + str(exp_date)
 
+    return bodyMessage
 
 # === Handler ===
 
@@ -70,10 +75,8 @@ def handler(ctx, data: io.BytesIO=None):
             url = "https://objectstorage.eu-frankfurt-1.oraclecloud.com" + par_resp.data.access_uri
             LOG.info(url)
 
-            bodyMessage = "Il Machine Learning report: " + resourceName + " è stato generato !! \n\n"
-            bodyMessage += "Puoi scaricarlo al link: " + url
-
-            LOG.info('Expiration date: ' + str(d))
+            # costruisce il body della mail
+            bodyMessage = build_bodyMail(resourceName, url, d):
                 
             notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 
