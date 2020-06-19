@@ -72,6 +72,8 @@ def handler(ctx, data: io.BytesIO=None):
 
             bodyMessage = "Il Machine Learning report: " + resourceName + " è stato generato !! \n\n"
             bodyMessage += "Puoi scaricarlo al link: " + url
+
+            LOG.info('Expiration date: ' + str(d))
                 
             notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
                 
