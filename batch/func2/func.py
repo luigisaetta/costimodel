@@ -5,7 +5,6 @@ import logging
 from datetime import datetime, timedelta
 import oci
 import oci.object_storage
-from io import StringIO
 
 
 from fdk import response
@@ -71,7 +70,7 @@ def handler(ctx, data: io.BytesIO=None):
             url = "https://objectstorage.eu-frankfurt-1.oraclecloud.com" + par_resp.data.access_uri
             LOG.info(url)
 
-            bodyMessage = "Il ML report: " + resourceName + " è stato generato !! \n"
+            bodyMessage = "Il Machine Learning report: " + resourceName + " è stato generato !! \n\n"
             bodyMessage += "Puoi scaricarlo al link: " + url
                 
             notificationMessage = {"default": "MLMsg", "body": bodyMessage, "title": "ML report generato"}
