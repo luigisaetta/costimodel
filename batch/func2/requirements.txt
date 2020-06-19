@@ -1,0 +1,4 @@
+fdk==0.1.12
+oci>=2.2.18
+cloudevents
+
