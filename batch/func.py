@@ -98,6 +98,8 @@ def handler(ctx, data: io.BytesIO=None):
         if ("createobject" in eventType) and ("csv" in resourceName):
 
             # legge il contenuto del file
+            LOG.info("Get object...")
+            
             obj_file = client.get_object(namespace, bucket_name, resourceName)
 
             content = obj_file.data.content.decode(ENCODING)
